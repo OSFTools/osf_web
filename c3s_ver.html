@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<a href="index.html">Return to index page</a>
+
+<html>
+    <head>
+        <title>Verification of C3S seasonal forecasts for MENA</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- need a new css <link rel="stylesheet" href="css/site.css"/> -->
+        <!-- jquery scripts must be in the <head> -->
+        <!-- code for the drop-down browser-->
+        <!-- the jQuery library location (using consistent version with other scripts)-->
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script>
+            //use jquery to change the imgElem element in the html
+            // when one of the dropdowns is selected
+            //
+
+            // list of metrics that require a category dropdown
+            const catList = ['roc', 'rocss', 'bs'];
+            function getImageSrc(){
+                // specify the path to the folder containing the imgs 
+                var imgFolder = "c3s_eval_plots_hc/"; 
+
+                // loop through each select element
+                $("select").each(function(){
+                    // fire function to get src on start
+                    getImageSrc();
+                    hideCat();
+
+                    // fire function to get src on change
+                    $(this).change(function(){
+                        getImageSrc();
+                        hideCat();
+                    })
+                });
+    
+
+                function hideCat(){
+                    $(this).change(function(){
+                        if (catList.includes($("#m-det").val())){
+                            $("#cat").show();
+                        }
+                        else{
+                            $("#cat").hide();
+                        }
+                    })
+                }
+            
+                function getImageSrc(){
+                    // update image for  plots based on chosen
+                    // dropbox boxes
+                    var imageSrc;
+
+                    // create an img element with the src each 
+                    // time and append to the image wrap div
+
+
+                    // depends on whether this is probabilistic or not
+                    // pattern for probabilistic:
+                    // 
+                    mdet = $("#m-det").val()
+                    if (catList.includes($("#m-det").val())){
+                        imageSrc = imgFolder + $("#model").val() + 
+                            "_1993-2016_monthly_mean_" +
+                            $("#seas").val() + 
+                            "_45:-30:-2.5:60_" +
+                            $("#var").val()  + 
+                            ".3m." +
+                            $("#m-det").val() + "_" + 
+                            $("#cat").val()  +
+                            ".png" ;
+                    }
+                    else{
+                        imageSrc = imgFolder + $("#model").val() + 
+                            "_1993-2016_monthly_mean_" +
+                            $("#seas").val() + 
+                            "_45:-30:-2.5:60_" +
+                            $("#var").val()  +
+                            ".3m." +
+                            $("#m-det").val() + 
+                            ".png" ;
+                    }
+                    // do update
+                    $("#img-det").html(`<img src="${imageSrc}" width=800>`);
+
+                };
+                
+            }
+            // fire functions on page-load
+            $(document).ready(function(){
+                $("#cat").hide();
+                getImageSrc();
+            })
+        </script>
+    </head>
+
+    <!--Start of body -->
+    <body >
+
+            
+    <h1>C3S Models evaluation</h1>
+
+            <div id="main">
+                <!--controls-->
+                <!--value must match filename patterns for static images-->
+                <select id="model">
+                    <option value="cmcc_35">cmcc_35</option>
+                    <option value="dwd_22">dwd_22</option>
+                    <option value="eccc_4">eccc_4</option>
+                    <option value="eccc_5">eccc_5</option>
+                    <option value="ecmwf_51">ecmwf_51</option>
+                    <option value="meteo_france_9">meteo_france_9</option>
+                    <option value="ncep_2">ncep_2</option>
+                    <option value="ukmo_604">ukmo_604</option>
+                </select>
+                <option value="ANOMALY_CORRELATION">Anomaly Correlation</option>
+                <select id="m-det">
+                    <option value="spearman_corr">Spearman Correlation</option>
+                    <option value="pearson_corr">ACC</option>
+                    <option value="rel">Reliability diagram</option>
+                    <option value="rps">RPS</option>
+                    <option value="bs">Briar Score</option>
+                    <option value="roc">ROC</option>
+                    <option value="rocss">ROC Skill score</option>
+                </select>
+                <select id="seas">
+                    <!-- to deal with variable forecast ranges this needs some logic -->
+                    <option value="12_234">JFM</option>
+                    <option value="1_234">FMA</option>
+                    <option value="2_234">MAM</option>
+                    <option value="3_234">AMJ</option>
+                    <option value="4_234">MJJ</option>
+                    <option value="5_234">JJA</option>
+                    <option value="6_234">JAS</option>
+                    <option value="7_234">ASO</option>
+                    <option value="8_234">SON</option>
+                    <option value="9_234">OND</option>
+                    <option value="10_234">NDJ</option>
+                    <option value="11_234">DJF</option>
+                </select>
+                <select id="var">
+                    <option value="2m_temperature">T2m</option>
+                    <option value="total_precipitation">Rain rate</option>
+                </select>
+                <select id="cat">
+                    <option value="category_0">Lower</option>
+                    <option value="category_1">Middle</option>
+                    <option value="category_2">Upper</option>
+                </select>
+         
+                <!--Image Displays here-->
+                <div id="img-det"></div>
+        
+
+            </div>      
+            <div id="footer">
+                Crown Copyright &copy; <script>document.write( new Date().getFullYear() );</script>, the Met Office. All Rights Reserved.
+            </div>
+    </body>
+</html>
+
