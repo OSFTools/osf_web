@@ -20,17 +20,19 @@
                 // loop through each select element
                 $("select").each(function(){
                     // fire function to get src on start
-                    getImageSrc();
+                    setImageSrc();
+                    hideSeas();
 
                     // fire function to get src on change
                     $(this).change(function(){
-                        getImageSrc();
+                        setImageSrc();
+                        hideSeas();
                     })
                 });
     
 
             
-                function getImageSrc(){
+                function setImageSrc(){
                     // update image for  plots based on chosen
                     // dropbox boxes
                     var imageSrc;
@@ -73,7 +75,18 @@
 
                 };
                 
-                
+                // hide the season dropdown for monthly forecasts
+                function hideSeas(){
+                    $(this).change(function(){
+                        if ($("#period").val() == "3m"){
+                            $("#seas").show();
+                        }
+                        else{
+                            $("#seas").hide();
+                        }
+                    })
+                }
+                                        
             }
             // fire functions on page-load
             $(document).ready(function(){
@@ -94,6 +107,10 @@
             <div id="main">
                 <!--controls-->
                 <!--value must match filename patterns for static images-->
+                <select id="period">
+                    <option value="3m" selected>3 month</option>
+                    <option value="1m">1 month</option> 
+                </select>
                 <select id="model">
                     <option value="cmcc_35">cmcc_35</option>
                     <option value="dwd_22">dwd_22</option>

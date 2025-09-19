@@ -18,19 +18,20 @@
 
             // list of metrics that require a category dropdown
             const catList = ['roc', 'rocss', 'bs'];
+
             function getImageSrc(){
                 // specify the path to the folder containing the imgs 
                 var imgFolder = "c3s_eval_plots_hc/"; 
 
                 // loop through each select element
                 $("select").each(function(){
-                    // fire function to get src on start
-                    getImageSrc();
+                    // fire function to set src on start
+                    setImageSrc();
                     hideCat();
 
                     // fire function to get src on change
                     $(this).change(function(){
-                        getImageSrc();
+                        setImageSrc();
                         hideCat();
                     })
                 });
@@ -46,8 +47,8 @@
                         }
                     })
                 }
-            
-                function getImageSrc(){
+
+                function setImageSrc(){
                     // update image for  plots based on chosen
                     // dropbox boxes
                     var imageSrc;
