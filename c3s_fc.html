@@ -12,6 +12,8 @@
             //use jquery to change the imgElem element in the html
             // when one of the dropdowns is selected
             //
+            // need to have domain as selectable?
+
 
             function getImageSrc(){
                 // specify the path to the folder containing the imgs 
@@ -38,51 +40,85 @@
                     var imageSrc;
 
                     // two patterns here - different for 1 and 3 month periods
+                    if ($("#period").val() == "1m"){
+                        // 1 month lead time
+                        const month_seas_1m = new Map([
+                            ["Feb", "2"],
+                            ["Mar", "3"],
+                            ["Apr", "4"],
+                            ["May", "5"],
+                            ["Jun", "6"],
+                            ["Jul", "7"],
+                            ["Aug", "8"],
+                            ["Sep", "9"],
+                            ["Oct", "10"],
+                            ["Nov", "11"],
+                            ["Dec", "12"],
+                            ["Jan", "1"]
+                        ]);
+                        let monthname = month_seas_1m.get($("#mon").val());
+                        let lead = "1"  // to change once we have  added a drop down for this
 
-                    // 3 month lead time (will need further improvements to deal with varying FC range)
-                    // may be best to change filename patterns?
-                    const month_seas_3m = new Map([
-                        ["FMA", "2_234"],
-                        ["MAM", "3_234"],
-                        ["AMJ", "4_234"],
-                        ["MJJ", "5_234"],
-                        ["JJA", "6_234"],
-                        ["JAS", "7_234"],
-                        ["ASO", "8_234"],
-                        ["SON", "9_234"],
-                        ["OND", "10_234"],
-                        ["NDJ", "11_234"],
-                        ["DJF", "12_234"],
-                        ["JFM", "1_234"]
-                    ]);
+                        imageSrc = imgFolder + $("#model").val() + 
+                            "_" + $("#year").val() + "-" + $("#year").val() 
+                            +"_monthly_mean_" +
+                            monthname + 
+                            "_lead_" +
+                            lead +
+                            "_45:-30:-2.5:60_" +
+                            $("#var").val()  + 
+                            ".png" ;
 
-                    // create an img element with the src each 
-                    // time and append to the image wrap div
+                    }
+                    else{
+                        // 3 month lead time (will need further improvements to deal with varying FC range)
+                        // may be best to change filename patterns?
+                        const month_seas_3m = new Map([
+                            ["FMA", "2_234"],
+                            ["MAM", "3_234"],
+                            ["AMJ", "4_234"],
+                            ["MJJ", "5_234"],
+                            ["JJA", "6_234"],
+                            ["JAS", "7_234"],
+                            ["ASO", "8_234"],
+                            ["SON", "9_234"],
+                            ["OND", "10_234"],
+                            ["NDJ", "11_234"],
+                            ["DJF", "12_234"],
+                            ["JFM", "1_234"]
+                        ]);
 
-                    let seasname = month_seas_3m.get($("#seas").val());
+                        // create an img element with the src each 
+                        // time and append to the image wrap div
 
-                    imageSrc = imgFolder + $("#model").val() + 
-                        "_" + $("#year").val() + "-" + $("#year").val() 
-                        +"_monthly_mean_" +
-                        seasname + 
-                        "_45:-30:-2.5:60_" +
-                        $("#var").val()  + 
-                        ".3m" +
-                        ".png" ;
+                        let seasname = month_seas_3m.get($("#seas").val());
+
+                        imageSrc = imgFolder + $("#model").val() + 
+                            "_" + $("#year").val() + "-" + $("#year").val() 
+                            +"_monthly_mean_" +
+                            seasname + 
+                            "_45:-30:-2.5:60_" +
+                            $("#var").val()  + 
+                            ".3m" +
+                            ".png" ;
+                    }
+
 
                     // do update
                     $("#img-det").html(`<img src="${imageSrc}" width=700>`);
 
                 };
                 
-                // hide the season dropdown for monthly forecasts
+                // hide the season dropdown for monthly forecasts and monthly for 3 month forecasts
                 function hideSeas(){
                     $(this).change(function(){
                         if ($("#period").val() == "3m"){
                             $("#seas").show();
+                            $("#mon").hide();
                         }
                         else{
                             $("#seas").hide();
+                            $("#mon").show();
                         }
                     })
                 }
@@ -90,7 +126,7 @@
             }
             // fire functions on page-load
             $(document).ready(function(){
-                $("#cat").hide();
+                $("#seas").hide();
                 getImageSrc();
             })
         </script>
@@ -125,8 +161,8 @@
                     <option value="2025">2025</option>
                     <option value="2024">2024</option>
                 </select>
+                
                 <select id="seas">
-                    <!-- to deal with variable forecast ranges this needs some logic -->
                     <option value="FMA">FMA</option>
                     <option value="MAM">MAM</option>
                     <option value="AMJ">AMJ</option>
@@ -139,6 +175,20 @@
                     <option value="NDJ">NDJ</option>
                     <option value="DJF">DJF</option>
                     <option value="JFM">JFM</option>
+                </select>
+                <select id="mon">
+                    <option value="Feb">Feb</option>
+                    <option value="Mar">Mar</option>
+                    <option value="Apr">Apr</option>
+                    <option value="May">May</option>
+                    <option value="Jun">Jun</option>
+                    <option value="Jul">Jul</option>
+                    <option value="Aug">Aug</option>
+                    <option value="Sep">Sep</option>
+                    <option value="Oct">Oct</option>
+                    <option value="Nov">Nov</option>
+                    <option value="Dec">Dec</option>
+                    <option value="Jan">Jan</option>
                 </select>
                 <select id="var">
                     <option value="2m_temperature">T2m</option>
