@@ -12,7 +12,8 @@
             //use jquery to change the imgElem element in the html
             // when one of the dropdowns is selected
             //
-            // need to have domain as selectable?
+            // domain (possibly make selectable in future)
+            const domain = "_45:-30:-2.5:60_";
 
 
             function getImageSrc(){
@@ -65,7 +66,7 @@
                             monthname + 
                             "_lead_" +
                             lead +
-                            "_45:-30:-2.5:60_" +
+                            domain +
                             $("#var").val()  + 
                             ".png" ;
 
@@ -96,7 +97,7 @@
                             "_" + $("#year").val() + "-" + $("#year").val() 
                             +"_monthly_mean_" +
                             seasname + 
-                            "_45:-30:-2.5:60_" +
+                            domain +
                             $("#var").val()  + 
                             ".3m" +
                             ".png" ;
