@@ -39,8 +39,6 @@
                     // dropbox boxes
                     var imageSrc;
 
-                    console.log("period selected is " + $("#period").val());
-
                     // two patterns here - different for 1 and 3 month periods
                     if ($("#period").val() == "1m"){
                         // 1 month lead time
@@ -89,12 +87,9 @@
                             ["DJF", "11_234"],
                             ["JFM", "12_234"]
                         ]);
-                        console.log("3m selected");
 
                         // create an img element with the src each 
                         // time and append to the image wrap div
-                        console.log($("#seas").val());
-
                         let seasname = month_seas_3m.get($("#seas").val());
 
                         imageSrc = imgFolder + $("#model").val() + 
