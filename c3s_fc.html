@@ -12,6 +12,8 @@
             //use jquery to change the imgElem element in the html
             // when one of the dropdowns is selected
             //
+            // need to have domain as selectable?
+
 
             function getImageSrc(){
                 // specify the path to the folder containing the imgs 
@@ -20,42 +22,110 @@
                 // loop through each select element
                 $("select").each(function(){
                     // fire function to get src on start
-                    getImageSrc();
+                    setImageSrc();
+                    hideSeas();
 
                     // fire function to get src on change
                     $(this).change(function(){
-                        getImageSrc();
+                        setImageSrc();
+                        hideSeas();
                     })
                 });
     
 
             
-                function getImageSrc(){
+                function setImageSrc(){
                     // update image for  plots based on chosen
                     // dropbox boxes
                     var imageSrc;
 
-                    // create an img element with the src each 
-                    // time and append to the image wrap div
+                    // two patterns here - different for 1 and 3 month periods
+                    if ($("#period").val() == "1m"){
+                        // 1 month lead time
+                        const month_seas_1m = new Map([
+                            ["Feb", "2"],
+                            ["Mar", "3"],
+                            ["Apr", "4"],
+                            ["May", "5"],
+                            ["Jun", "6"],
+                            ["Jul", "7"],
+                            ["Aug", "8"],
+                            ["Sep", "9"],
+                            ["Oct", "10"],
+                            ["Nov", "11"],
+                            ["Dec", "12"],
+                            ["Jan", "1"]
+                        ]);
+                        let monthname = month_seas_1m.get($("#mon").val());
+                        let lead = "1"  // to change once we have  added a drop down for this
 
-                    imageSrc = imgFolder + $("#model").val() + 
-                        "_" + $("#year").val() + "-" + $("#year").val() 
-                        +"_monthly_mean_" +
-                        $("#seas").val() + 
-                        "_45:-30:-2.5:60_" +
-                        $("#var").val()  + 
-                        ".3m" +
-                        ".png" ;
+                        imageSrc = imgFolder + $("#model").val() + 
+                            "_" + $("#year").val() + "-" + $("#year").val() 
+                            +"_monthly_mean_" +
+                            monthname + 
+                            "_lead_" +
+                            lead +
+                            "_45:-30:-2.5:60_" +
+                            $("#var").val()  + 
+                            ".png" ;
+
+                    }
+                    else{
+                        // 3 month lead time (will need further improvements to deal with varying FC range)
+                        // may be best to change filename patterns?
+                        const month_seas_3m = new Map([
+                            ["FMA", "1_234"],
+                            ["MAM", "2_234"],
+                            ["AMJ", "3_234"],
+                            ["MJJ", "4_234"],
+                            ["JJA", "5_234"],
+                            ["JAS", "6_234"],
+                            ["ASO", "7_234"],
+                            ["SON", "8_234"],
+                            ["OND", "9_234"],
+                            ["NDJ", "10_234"],
+                            ["DJF", "11_234"],
+                            ["JFM", "12_234"]
+                        ]);
+
+                        // create an img element with the src each 
+                        // time and append to the image wrap div
+                        let seasname = month_seas_3m.get($("#seas").val());
+
+                        imageSrc = imgFolder + $("#model").val() + 
+                            "_" + $("#year").val() + "-" + $("#year").val() 
+                            +"_monthly_mean_" +
+                            seasname + 
+                            "_45:-30:-2.5:60_" +
+                            $("#var").val()  + 
+                            ".3m" +
+                            ".png" ;
+                    }
+
 
                     // do update
                     $("#img-det").html(`<img src="${imageSrc}" width=700>`);
 
                 };
                 
+                // hide the season dropdown for monthly forecasts and monthly for 3 month forecasts
+                function hideSeas(){
+                    $(this).change(function(){
+                        if ($("#period").val() == "3m"){
+                            $("#seas").show();
+                            $("#mon").hide();
+                        }
+                        else{
+                            $("#seas").hide();
+                            $("#mon").show();
+                        }
+                    })
+                }
+                                        
             }
             // fire functions on page-load
             $(document).ready(function(){
-                $("#cat").hide();
+                $("#mon").hide();
                 getImageSrc();
             })
         </script>
@@ -72,6 +142,10 @@
             <div id="main">
                 <!--controls-->
                 <!--value must match filename patterns for static images-->
+                <select id="period">
+                    <option value="3m" selected>3m mean</option>
+                    <option value="1m">1m mean</option> 
+                </select>
                 <select id="model">
                     <option value="cmcc_35">cmcc_35</option>
                     <option value="dwd_22">dwd_22</option>
@@ -86,20 +160,34 @@
                     <option value="2025">2025</option>
                     <option value="2024">2024</option>
                 </select>
+                
                 <select id="seas">
-                    <!-- to deal with variable forecast ranges this needs some logic -->
-                    <option value="1_234">FMA</option>
-                    <option value="2_234">MAM</option>
-                    <option value="3_234">AMJ</option>
-                    <option value="4_234">MJJ</option>
-                    <option value="5_234">JJA</option>
-                    <option value="6_234">JAS</option>
-                    <option value="7_234">ASO</option>
-                    <option value="8_234">SON</option>
-                    <option value="9_234">OND</option>
-                    <option value="10_234">NDJ</option>
-                    <option value="11_234">DJF</option>
-                    <option value="12_234">JFM</option>
+                    <option value="FMA">FMA</option>
+                    <option value="MAM">MAM</option>
+                    <option value="AMJ">AMJ</option>
+                    <option value="MJJ">MJJ</option>
+                    <option value="JJA">JJA</option>
+                    <option value="JAS">JAS</option>
+                    <option value="ASO">ASO</option>
+                    <option value="SON">SON</option>
+                    <option value="OND">OND</option>
+                    <option value="NDJ">NDJ</option>
+                    <option value="DJF">DJF</option>
+                    <option value="JFM">JFM</option>
+                </select>
+                <select id="mon">
+                    <option value="Feb">Feb</option>
+                    <option value="Mar">Mar</option>
+                    <option value="Apr">Apr</option>
+                    <option value="May">May</option>
+                    <option value="Jun">Jun</option>
+                    <option value="Jul">Jul</option>
+                    <option value="Aug">Aug</option>
+                    <option value="Sep">Sep</option>
+                    <option value="Oct">Oct</option>
+                    <option value="Nov">Nov</option>
+                    <option value="Dec">Dec</option>
+                    <option value="Jan">Jan</option>
                 </select>
                 <select id="var">
                     <option value="2m_temperature">T2m</option>
