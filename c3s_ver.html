@@ -149,9 +149,11 @@
                 
             }
             // fire functions on page-load
+            // as spearman is default hide category selector
+            // as 3 month is default, hide month selector
             $(document).ready(function(){
                 $("#cat").hide();
-                $("#seas").hide();
+                $("#mon").hide();
                 getImageSrc();
             })
         </script>
@@ -181,7 +183,7 @@
                     <option value="ukmo_604">ukmo_604</option>
                 </select>
                 <select id="m-det">
-                    <option value="spearman_corr">Spearman Correlation</option>
+                    <option value="spearman_corr" selected>Spearman Correlation</option>
                     <option value="pearson_corr">ACC</option>
                     <option value="rel">Reliability diagram</option>
                     <option value="rps">RPS</option>
