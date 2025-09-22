@@ -20,6 +20,8 @@
             const catList = ['roc', 'rocss', 'bs'];
 
             function getImageSrc(){
+
+                let seasname;
                 // specify the path to the folder containing the imgs 
                 var imgFolder = "c3s_eval_plots_hc/"; 
 
@@ -28,11 +30,13 @@
                     // fire function to set src on start
                     setImageSrc();
                     hideCat();
+                    hideSeas();
 
                     // fire function to get src on change
                     $(this).change(function(){
                         setImageSrc();
                         hideCat();
+                        hideSeas();
                     })
                 });
     
@@ -53,25 +57,48 @@
                     // dropbox boxes
                     var imageSrc;
 
-                    // 3 month lead time (will need further improvements to deal with varying FC range)
-                    // may be best to change filename patterns?
-                    const month_seas_3m = new Map([
-                        ["FMA", "2_234"],
-                        ["MAM", "3_234"],
-                        ["AMJ", "4_234"],
-                        ["MJJ", "5_234"],
-                        ["JJA", "6_234"],
-                        ["JAS", "7_234"],
-                        ["ASO", "8_234"],
-                        ["SON", "9_234"],
-                        ["OND", "10_234"],
-                        ["NDJ", "11_234"],
-                        ["DJF", "12_234"],
-                        ["JFM", "1_234"]
-                    ]);
+                    if ($("#period").val() == "3m"){
 
-                    let seasname = month_seas_3m.get($("#seas").val());
+                        // 3 month lead time (will need further improvements to deal with varying FC range)
+                        // may be best to change filename patterns?
+                        const month_seas_3m = new Map([
+                            ["FMA", "1_234"],
+                            ["MAM", "2_234"],
+                            ["AMJ", "3_234"],
+                            ["MJJ", "4_234"],
+                            ["JJA", "5_234"],
+                            ["JAS", "6_234"],
+                            ["ASO", "7_234"],
+                            ["SON", "8_234"],
+                            ["OND", "9_234"],
+                            ["NDJ", "10_234"],
+                            ["DJF", "11_234"],
+                            ["JFM", "12_234"]
+                        ]);
 
+                        seasname = month_seas_3m.get($("#seas").val());
+
+                    }
+                    else
+                    {
+                        // 1 month lead time. Filenames need to change. Not 234....
+                        // also do we already do multiple fc ranges?
+                        const month_seas_1m = new Map([
+                            ["Feb", "1_234"],
+                            ["Mar", "2_234"],
+                            ["Apr", "3_234"],
+                            ["May", "4_234"],
+                            ["Jun", "5_234"],
+                            ["Jul", "6_234"],
+                            ["Aug", "7_234"],
+                            ["Sep", "8_234"],
+                            ["Oct", "9_234"],
+                            ["Nov", "10_234"],
+                            ["Dec", "11_234"],
+                            ["Jan", "12_234"]
+                        ]);
+                        seasname = month_seas_1m.get($("#mon").val());
+                    }
                     // create an img element with the src each 
                     // time and append to the image wrap div
 
@@ -79,14 +106,15 @@
                     // depends on whether this is probabilistic or not
                     // pattern for probabilistic:
                     // 
-                    mdet = $("#m-det").val()
+
+                    
                     if (catList.includes($("#m-det").val())){
                         imageSrc = imgFolder + $("#model").val() + 
                             "_1993-2016_monthly_mean_" +
                             seasname + 
                             "_45:-30:-2.5:60_" +
-                            $("#var").val()  + 
-                            ".3m." +
+                            $("#var").val()  + "." +
+                            $("#period").val()  + "." +
                             $("#m-det").val() + "_" + 
                             $("#cat").val()  +
                             ".png" ;
@@ -96,8 +124,8 @@
                             "_1993-2016_monthly_mean_" +
                             seasname + 
                             "_45:-30:-2.5:60_" +
-                            $("#var").val()  +
-                            ".3m." +
+                            $("#var").val()  + "." +
+                            $("#period").val()  + "." +
                             $("#m-det").val() + 
                             ".png" ;
                     }
@@ -105,11 +133,25 @@
                     $("#img-det").html(`<img src="${imageSrc}" width=800>`);
 
                 };
+                // hide the season dropdown for monthly forecasts and monthly for 3 month forecasts
+                function hideSeas(){
+                    $(this).change(function(){
+                        if ($("#period").val() == "3m"){
+                            $("#seas").show();
+                            $("#mon").hide();
+                        }
+                        else{
+                            $("#seas").hide();
+                            $("#mon").show();
+                        }
+                    })
+                }
                 
             }
             // fire functions on page-load
             $(document).ready(function(){
                 $("#cat").hide();
+                $("#seas").hide();
                 getImageSrc();
             })
         </script>
@@ -124,6 +166,10 @@
             <div id="main">
                 <!--controls-->
                 <!--value must match filename patterns for static images-->
+                <select id="period">
+                    <option value="3m" selected>3m mean</option>
+                    <option value="1m">1m mean</option> 
+                </select>
                 <select id="model">
                     <option value="cmcc_35">cmcc_35</option>
                     <option value="dwd_22">dwd_22</option>
@@ -134,7 +180,6 @@
                     <option value="ncep_2">ncep_2</option>
                     <option value="ukmo_604">ukmo_604</option>
                 </select>
-                <option value="ANOMALY_CORRELATION">Anomaly Correlation</option>
                 <select id="m-det">
                     <option value="spearman_corr">Spearman Correlation</option>
                     <option value="pearson_corr">ACC</option>
@@ -158,6 +203,20 @@
                     <option value="NDJ">NDJ</option>
                     <option value="DJF">DJF</option>
                     <option value="JFM">JFM</option>
+                </select>
+                <select id="mon">
+                    <option value="Feb">Feb</option>
+                    <option value="Mar">Mar</option>
+                    <option value="Apr">Apr</option>
+                    <option value="May">May</option>
+                    <option value="Jun">Jun</option>
+                    <option value="Jul">Jul</option>
+                    <option value="Aug">Aug</option>
+                    <option value="Sep">Sep</option>
+                    <option value="Oct">Oct</option>
+                    <option value="Nov">Nov</option>
+                    <option value="Dec">Dec</option>
+                    <option value="Jan">Jan</option>
                 </select>
                 <select id="var">
                     <option value="2m_temperature">T2m</option>

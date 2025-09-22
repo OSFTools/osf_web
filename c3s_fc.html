@@ -39,6 +39,8 @@
                     // dropbox boxes
                     var imageSrc;
 
+                    console.log("period selected is " + $("#period").val());
+
                     // two patterns here - different for 1 and 3 month periods
                     if ($("#period").val() == "1m"){
                         // 1 month lead time
@@ -74,22 +76,24 @@
                         // 3 month lead time (will need further improvements to deal with varying FC range)
                         // may be best to change filename patterns?
                         const month_seas_3m = new Map([
-                            ["FMA", "2_234"],
-                            ["MAM", "3_234"],
-                            ["AMJ", "4_234"],
-                            ["MJJ", "5_234"],
-                            ["JJA", "6_234"],
-                            ["JAS", "7_234"],
-                            ["ASO", "8_234"],
-                            ["SON", "9_234"],
-                            ["OND", "10_234"],
-                            ["NDJ", "11_234"],
-                            ["DJF", "12_234"],
-                            ["JFM", "1_234"]
+                            ["FMA", "1_234"],
+                            ["MAM", "2_234"],
+                            ["AMJ", "3_234"],
+                            ["MJJ", "4_234"],
+                            ["JJA", "5_234"],
+                            ["JAS", "6_234"],
+                            ["ASO", "7_234"],
+                            ["SON", "8_234"],
+                            ["OND", "9_234"],
+                            ["NDJ", "10_234"],
+                            ["DJF", "11_234"],
+                            ["JFM", "12_234"]
                         ]);
+                        console.log("3m selected");
 
                         // create an img element with the src each 
                         // time and append to the image wrap div
+                        console.log($("#seas").val());
 
                         let seasname = month_seas_3m.get($("#seas").val());
 
@@ -144,8 +148,8 @@
                 <!--controls-->
                 <!--value must match filename patterns for static images-->
                 <select id="period">
-                    <option value="3m" selected>3 month</option>
-                    <option value="1m">1 month</option> 
+                    <option value="3m" selected>3m mean</option>
+                    <option value="1m">1m mean</option> 
                 </select>
                 <select id="model">
                     <option value="cmcc_35">cmcc_35</option>
